@@ -1,9 +1,9 @@
 {
-  "name": "logseq-plugin-react-boilerplate",
-  "version": "1.1.0",
+  "name": "logseq-plugin-git",
+  "version": "1.0.0",
   "main": "dist/index.html",
   "logseq": {
-    "id": "logseq-plugin-react-boilerplate",
+    "id": "logseq-plugin-git",
     "icon": "logo.png"
   },
   "scripts": {
