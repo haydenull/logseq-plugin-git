@@ -1,3 +1,10 @@
+# 1.0.0 (2022-04-08)
+
+
+### Features
+
+* ✨ add icon ([0f52416](https://github.com/haydenull/logseq-plugin-git/commit/0f52416ef8594525fb2fb527bc05c98fa327e308))
+
 # [1.1.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.0.0...v1.1.0) (2022-03-08)
 
 
