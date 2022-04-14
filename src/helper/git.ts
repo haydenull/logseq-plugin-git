@@ -6,6 +6,7 @@ export const status = async () => {
   const res =  await logseq.App.execGitCommand(['status', '--porcelain'])
   console.log('[faiz:] === status', res)
   // changed files    staged files
+  return res
 }
 
 // log with git log --pretty=format:"%h %ad | %s%d [%an]" --date=short

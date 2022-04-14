@@ -2,32 +2,11 @@ import '@logseq/libs'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { status } from './helper/git'
+import { commit, push, status } from './helper/git'
+import { checkStatus } from './helper/util'
 import './index.css'
 
 const isDevelopment = import.meta.env.DEV
-
-const INACTIVE_STYLE = `
-#injected-ui-item-git-logseq-plugin-git::after {
-  display: none;
-}
-`
-const ACTIVE_STYLE = `
-#injected-ui-item-git-logseq-plugin-git {
-  position: relative;
-}
-#injected-ui-item-git-logseq-plugin-git::after {
-  display: block;
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  border-radius: 100%;
-  background-color: rgb(237, 66, 69);
-  right: 8px;
-  top: 6px;
-}
-`
 
 if (isDevelopment) {
   renderApp('browser')
@@ -44,11 +23,13 @@ if (isDevelopment) {
           // .then((el: HTMLElement) => {
           //   el.classList.add('git-active')
           // })
-        logseq.provideStyle({
-          key: 'git',
-          // add an indicator to the menu
-          style: ACTIVE_STYLE,
-        })
+        // logseq.provideStyle({
+        //   key: 'git',
+        //   // add an indicator to the menu
+        //   style: ACTIVE_STYLE,
+        // })
+        await commit(`[logseq-plugin-git:push] ${new Date().toISOString()}`)
+        await push()
       },
     })
 
@@ -57,7 +38,10 @@ if (isDevelopment) {
       template: '<a data-on-click="push" class="button"><i class="ti ti-brand-git"></i></a>',
     })
 
-    status()
+    logseq.App.onRouteChanged(async () => {
+      checkStatus()
+    })
+
 
   })
 }
