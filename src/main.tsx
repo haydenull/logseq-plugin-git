@@ -99,7 +99,9 @@ if (isDevelopment) {
       checkStatus()
     })
     logseq.DB.onChanged(async () => {
-      checkStatus()
+      setTimeout(() => {
+        checkStatus()
+      }, 1000)
     })
 
 
