@@ -4,21 +4,26 @@ export const COMMON_STYLE = `
 }
 #injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git {
   position: absolute;
-  top: 40px;
+  top: 36px;
   left: 50%;
   transform: translateX(-50%);
+  background-color: var(--ls-secondary-background-color);
+  padding: 10px;
+  border-radius: .375rem;
+  --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
 }
 #injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git::before {
   content: '';
   position: absolute;
-  top: -10px;
+  top: -8px;
   left: 50%;
   transform: translateX(-50%);
   width: 0;
   height: 0;
   border-style: solid;
-  border-width: 0 8px 10px 8px;
-  border-color: transparent transparent green transparent;
+  border-width: 0 10px 8px 10px;
+  border-color: transparent transparent var(--ls-secondary-background-color) transparent;
 }
 `
 
@@ -34,6 +39,7 @@ export const HIDE_POPUP_STYLE = `
 `
 
 export const INACTIVE_STYLE = `
+${COMMON_STYLE}
 #injected-ui-item-git-logseq-plugin-git::after {
   display: none;
 }
