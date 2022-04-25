@@ -1,3 +1,5 @@
+import { SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user"
+
 export const COMMON_STYLE = `
 #injected-ui-item-git-logseq-plugin-git {
   position: relative;
@@ -12,6 +14,7 @@ export const COMMON_STYLE = `
   border-radius: .375rem;
   --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),0 4px 6px -2px rgba(0, 0, 0, 0.05);
   box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
+  display: none;
 }
 #injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git::before {
   content: '';
@@ -33,7 +36,7 @@ export const SHOW_POPUP_STYLE = `
 }
 `
 export const HIDE_POPUP_STYLE = `
-#injected-ui-item-git-logseq-plugin-git .plugin-git-popup {
+#injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git {
   display: none;
 }
 `
@@ -85,3 +88,23 @@ ${COMMON_STYLE}
   }
 }
 `
+
+export const BUTTONS = [
+  { key: 'status', title: 'Check Status', event: 'check' },
+  { key: 'log', title: 'Show Log', event: 'log' },
+  { key: 'commit', title: 'Commit', event: 'commit' },
+  { key: 'push', title: 'Push', event: 'push' },
+  { key: 'commitAndPush', title: 'Commit & Push', event: 'commitAndPush' },
+]
+
+export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
+  {
+    key: 'buttons',
+    title: 'Buttons',
+    type: 'enum',
+    default: ['status', 'log', 'commitAndPush'],
+    description: 'Select buttons to show',
+    enumPicker: 'checkbox',
+    enumChoices: BUTTONS.map(({ title }) => title),
+  }
+]

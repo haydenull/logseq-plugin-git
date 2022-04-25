@@ -2,9 +2,9 @@ import '@logseq/libs'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { COMMON_STYLE, LOADING_STYLE, SHOW_POPUP_STYLE } from './helper/constants'
-import { commit, push, status } from './helper/git'
-import { checkStatus, getPluginStyle, setPluginStyle } from './helper/util'
+import { BUTTONS, COMMON_STYLE, LOADING_STYLE, SETTINGS_SCHEMA, SHOW_POPUP_STYLE } from './helper/constants'
+import { commit, log, push, status } from './helper/git'
+import { checkStatus, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
 import './index.css'
 
 const isDevelopment = import.meta.env.DEV
@@ -20,20 +20,47 @@ if (isDevelopment) {
     logseq.provideModel({
       async check() {
         const status = await checkStatus()
-        logseq.App.showMsg(status)
+        if (status?.stdout === '') {
+          logseq.App.showMsg('No changes detected.')
+        } else {
+          // logseq.App.showMsg('Changes detected:\n' + status, 'error')
+          logseq.App.showMsg('Changes detected:\n' + status.stdout)
+        }
+        hidePopup()
+      },
+      async commit() {
+        hidePopup()
+        console.log('Committing...')
+        await commit(`[logseq-plugin-git:commit] ${new Date().toISOString()}`)
       },
       async push() {
         setPluginStyle(LOADING_STYLE)
-        console.log('Committing...')
-        await commit(`[logseq-plugin-git:push] ${new Date().toISOString()}`)
+        hidePopup()
         console.log('Pushing...')
         await push()
         console.log('Checking status...')
         checkStatus()
+        logseq.App.showMsg('Pushed Successfully!')
+      },
+      async commitAndPush() {
+        setPluginStyle(LOADING_STYLE)
+        hidePopup()
+        console.log('Committing...')
+        await commit(`[logseq-plugin-git:commit] ${new Date().toISOString()}`)
+        console.log('Pushing...')
+        await push()
+        console.log('Checking status...')
+        checkStatus()
+        logseq.App.showMsg('Pushed Successfully!')
+      },
+      async log() {
+        const res = await log()
+        // logseq.App.showMsg(res?.stdout, 'error')
+        logseq.App.showMsg(res?.stdout)
+        hidePopup()
       },
       async showPopup() {
-        const _style = getPluginStyle()
-        setPluginStyle(`${_style}\n${SHOW_POPUP_STYLE}`)
+        showPopup()
       },
     })
 
@@ -41,21 +68,37 @@ if (isDevelopment) {
       key: 'git',
       template: '<a data-on-click="showPopup" class="button"><i class="ti ti-brand-git"></i></a>',
     })
+    logseq.useSettingsSchema(SETTINGS_SCHEMA)
     setTimeout(() => {
-      setPluginStyle(COMMON_STYLE + SHOW_POPUP_STYLE)
-      logseq.provideUI({
-        key: 'git',
-        path: '#injected-ui-item-git-logseq-plugin-git',
-        template: `
-          <div class="plugin-git-popup flex flex-col">
-            <button data-on-click="check" class="text-sm bg-green-600">Check Status</button>
-            <button data-on-click="push" class="text-sm bg-green-600">Push</button>
-          </div>
-        `,
-      })
+      // setPluginStyle(COMMON_STYLE + SHOW_POPUP_STYLE)
+      const buttons = (logseq.settings?.buttons as string[])?.map(title => BUTTONS.find(b => b.title === title))
+      console.log('[faiz:] === buttons', buttons, logseq.settings?.buttons)
+      if (buttons?.length) {
+        logseq.provideUI({
+          key: 'git',
+          path: '#injected-ui-item-git-logseq-plugin-git',
+          template: `
+            <div class="plugin-git-popup flex flex-col">
+              ${buttons.map(button => '<button data-on-click="' + button?.event + '" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">' + button?.title + '</button>').join('\n')}
+            </div>
+          `,
+        })
+            // <button data-on-click="check" type="button" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">
+            //   Check Status
+            // </button>
+            // <button data-on-click="log" type="button" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">
+            //   Show Log
+            // </button>
+            // <button data-on-click="push" type="button" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">
+            //   Commit & Push
+            // </button>
+      }
     }, 1000)
 
     logseq.App.onRouteChanged(async () => {
+      checkStatus()
+    })
+    logseq.DB.onChanged(async () => {
       checkStatus()
     })
 
