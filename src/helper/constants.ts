@@ -4,7 +4,7 @@ export const COMMON_STYLE = `
 #injected-ui-item-git-logseq-plugin-git {
   position: relative;
 }
-#injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git {
+#injected-ui-item-git-logseq-plugin-git #logseq-plugin-git--git #plugin-git-content-wrapper {
   position: absolute;
   top: 36px;
   left: 50%;
@@ -16,7 +16,7 @@ export const COMMON_STYLE = `
   box-shadow: var(--tw-ring-offset-shadow,0 0 #0000),var(--tw-ring-shadow,0 0 #0000),var(--tw-shadow);
   display: none;
 }
-#injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git::before {
+#injected-ui-item-git-logseq-plugin-git #logseq-plugin-git--git #plugin-git-content-wrapper::before {
   content: '';
   position: absolute;
   top: -8px;
@@ -31,12 +31,12 @@ export const COMMON_STYLE = `
 `
 
 export const SHOW_POPUP_STYLE = `
-#injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git {
+#injected-ui-item-git-logseq-plugin-git #logseq-plugin-git--git #plugin-git-content-wrapper {
   display: block;
 }
 `
 export const HIDE_POPUP_STYLE = `
-#injected-ui-item-git-logseq-plugin-git #git--logseq-plugin-git {
+#injected-ui-item-git-logseq-plugin-git #logseq-plugin-git--git #plugin-git-content-wrapper {
   display: none;
 }
 `

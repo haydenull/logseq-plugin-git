@@ -19,12 +19,12 @@ if (isDevelopment) {
 
     logseq.provideModel({
       async check() {
+        console.log('[faiz:] === check click')
         const status = await checkStatus()
         if (status?.stdout === '') {
           logseq.App.showMsg('No changes detected.')
         } else {
-          // logseq.App.showMsg('Changes detected:\n' + status, 'error')
-          logseq.App.showMsg('Changes detected:\n' + status.stdout)
+          logseq.App.showMsg('Changes detected:\n' + status.stdout, 'error')
         }
         hidePopup()
       },
@@ -55,18 +55,19 @@ if (isDevelopment) {
       },
       async log() {
         const res = await log()
-        // logseq.App.showMsg(res?.stdout, 'error')
-        logseq.App.showMsg(res?.stdout)
+        logseq.App.showMsg(res?.stdout, 'error')
+        // logseq.App.showMsg(res?.stdout)
         hidePopup()
       },
       async showPopup() {
+        console.log('[faiz:] === showPopup click')
         showPopup()
       },
     })
 
     logseq.App.registerUIItem('toolbar', {
       key: 'git',
-      template: '<a data-on-click="showPopup" class="button"><i class="ti ti-brand-git"></i></a>',
+      template: '<a data-on-click="showPopup" class="button"><i class="ti ti-brand-git"></i></a><div id="plugin-git-content-wrapper"></div>',
     })
     logseq.useSettingsSchema(SETTINGS_SCHEMA)
     setTimeout(() => {
@@ -75,23 +76,14 @@ if (isDevelopment) {
       console.log('[faiz:] === buttons', buttons, logseq.settings?.buttons)
       if (buttons?.length) {
         logseq.provideUI({
-          key: 'git',
-          path: '#injected-ui-item-git-logseq-plugin-git',
+          key: 'git-popup',
+          path: '#plugin-git-content-wrapper',
           template: `
             <div class="plugin-git-popup flex flex-col">
               ${buttons.map(button => '<button data-on-click="' + button?.event + '" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">' + button?.title + '</button>').join('\n')}
             </div>
           `,
         })
-            // <button data-on-click="check" type="button" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">
-            //   Check Status
-            // </button>
-            // <button data-on-click="log" type="button" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">
-            //   Show Log
-            // </button>
-            // <button data-on-click="push" type="button" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">
-            //   Commit & Push
-            // </button>
       }
     }, 1000)
 
