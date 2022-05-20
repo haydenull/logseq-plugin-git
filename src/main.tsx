@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { BUTTONS, COMMON_STYLE, LOADING_STYLE, SETTINGS_SCHEMA, SHOW_POPUP_STYLE } from './helper/constants'
 import { commit, log, push, status } from './helper/git'
-import { checkStatus, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
+import { checkStatus, debounce, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
 import './index.css'
 
 const isDevelopment = import.meta.env.DEV
@@ -18,7 +18,7 @@ if (isDevelopment) {
     checkStatus()
 
     logseq.provideModel({
-      async check() {
+      check: debounce(async function() {
         console.log('[faiz:] === check click')
         const status = await checkStatus()
         if (status?.stdout === '') {
@@ -27,13 +27,13 @@ if (isDevelopment) {
           logseq.App.showMsg('Changes detected:\n' + status.stdout, 'error')
         }
         hidePopup()
-      },
-      async commit() {
+      }),
+      commit: debounce(async function () {
         hidePopup()
         console.log('Committing...')
         await commit(`[logseq-plugin-git:commit] ${new Date().toISOString()}`)
-      },
-      async push() {
+      }),
+      push: debounce(async function () {
         setPluginStyle(LOADING_STYLE)
         hidePopup()
         console.log('Pushing...')
@@ -41,8 +41,8 @@ if (isDevelopment) {
         console.log('Checking status...')
         checkStatus()
         logseq.App.showMsg('Pushed Successfully!')
-      },
-      async commitAndPush() {
+      }),
+      commitAndPush: debounce(async function () {
         setPluginStyle(LOADING_STYLE)
         hidePopup()
         console.log('Committing...')
@@ -52,17 +52,18 @@ if (isDevelopment) {
         console.log('Checking status...')
         checkStatus()
         logseq.App.showMsg('Pushed Successfully!')
-      },
-      async log() {
+      }),
+      log: debounce(async function() {
+        console.log('[faiz:] === log click')
         const res = await log()
         logseq.App.showMsg(res?.stdout, 'error')
         // logseq.App.showMsg(res?.stdout)
         hidePopup()
-      },
-      async showPopup() {
+      }),
+      showPopup: debounce(async function() {
         console.log('[faiz:] === showPopup click')
         showPopup()
-      },
+      }),
     })
 
     logseq.App.registerUIItem('toolbar', {

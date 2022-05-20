@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "main": "dist/index.html",
   "logseq": {
-    "id": "logseq-plugin-git",
+    "id": "logseq-git",
     "icon": "logo.png"
   },
   "scripts": {
