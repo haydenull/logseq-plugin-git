@@ -1,3 +1,10 @@
+## [1.0.2](https://github.com/haydenull/logseq-plugin-git/compare/v1.0.1...v1.0.2) (2022-05-20)
+
+
+### Bug Fixes
+
+* The id does not match expectations ([dffcaa3](https://github.com/haydenull/logseq-plugin-git/commit/dffcaa3b71086bad022350494c841bed7576d9c3))
+
 ## [1.0.1](https://github.com/haydenull/logseq-plugin-git/compare/v1.0.0...v1.0.1) (2022-05-05)
 
 
