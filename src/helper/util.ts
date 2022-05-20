@@ -30,3 +30,21 @@ export const hidePopup = () => {
   const _style = getPluginStyle()
   setPluginStyle(`${_style}\n${HIDE_POPUP_STYLE}`)
 }
+
+
+export const debounce = (fn, wait: number = 100, environment?: any) => {
+  let timer = null
+  return function() {
+    // @ts-ignore
+    const context = environment || this
+    const args = arguments
+    if (timer) {
+      clearTimeout(timer)
+      timer = null
+    }
+    // @ts-ignore
+    timer = setTimeout(function () {
+      fn.apply(context, args)
+    }, wait)
+  }
+}
