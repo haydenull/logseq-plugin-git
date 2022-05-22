@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.0.2...v1.1.0) (2022-05-22)
+
+
+### Features
+
+* ✨ add pull and checkout buttons ([f950626](https://github.com/haydenull/logseq-plugin-git/commit/f950626e2a3776c805a96267bbd37ba7a7eae9da))
+
 ## [1.0.2](https://github.com/haydenull/logseq-plugin-git/compare/v1.0.1...v1.0.2) (2022-05-20)
 
 
