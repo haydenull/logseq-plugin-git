@@ -3,7 +3,7 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import { BUTTONS, COMMON_STYLE, LOADING_STYLE, SETTINGS_SCHEMA, SHOW_POPUP_STYLE } from './helper/constants'
-import { commit, log, push, status } from './helper/git'
+import { checkout, commit, log, pull, pullRebase, push, status } from './helper/git'
 import { checkStatus, debounce, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
 import './index.css'
 
@@ -28,41 +28,55 @@ if (isDevelopment) {
         }
         hidePopup()
       }),
+      pull: debounce(async function() {
+        console.log('[faiz:] === pull click')
+        setPluginStyle(LOADING_STYLE)
+        hidePopup()
+        await pull(false)
+        checkStatus()
+      }),
+      pullRebase: debounce(async function() {
+        console.log('[faiz:] === pullRebase click')
+        setPluginStyle(LOADING_STYLE)
+        hidePopup()
+        await pullRebase()
+        checkStatus()
+      }),
+      checkout: debounce(async function() {
+        console.log('[faiz:] === checkout click')
+        hidePopup()
+        checkout()
+      }),
       commit: debounce(async function () {
         hidePopup()
-        console.log('Committing...')
-        await commit(`[logseq-plugin-git:commit] ${new Date().toISOString()}`)
+        commit(true, `[logseq-plugin-git:commit] ${new Date().toISOString()}`)
       }),
       push: debounce(async function () {
         setPluginStyle(LOADING_STYLE)
         hidePopup()
-        console.log('Pushing...')
         await push()
-        console.log('Checking status...')
         checkStatus()
-        logseq.App.showMsg('Pushed Successfully!')
       }),
       commitAndPush: debounce(async function () {
         setPluginStyle(LOADING_STYLE)
         hidePopup()
-        console.log('Committing...')
-        await commit(`[logseq-plugin-git:commit] ${new Date().toISOString()}`)
-        console.log('Pushing...')
-        await push()
-        console.log('Checking status...')
+        await commit(true, `[logseq-plugin-git:commit] ${new Date().toISOString()}`)
+        await push(true)
         checkStatus()
-        logseq.App.showMsg('Pushed Successfully!')
       }),
       log: debounce(async function() {
         console.log('[faiz:] === log click')
-        const res = await log()
+        const res = await log(false)
         logseq.App.showMsg(res?.stdout, 'error')
-        // logseq.App.showMsg(res?.stdout)
         hidePopup()
       }),
       showPopup: debounce(async function() {
         console.log('[faiz:] === showPopup click')
         showPopup()
+      }),
+      hidePopup: debounce(function() {
+        console.log('[faiz:] === hidePopup click')
+        hidePopup()
       }),
     })
 
@@ -72,9 +86,7 @@ if (isDevelopment) {
     })
     logseq.useSettingsSchema(SETTINGS_SCHEMA)
     setTimeout(() => {
-      // setPluginStyle(COMMON_STYLE + SHOW_POPUP_STYLE)
       const buttons = (logseq.settings?.buttons as string[])?.map(title => BUTTONS.find(b => b.title === title))
-      console.log('[faiz:] === buttons', buttons, logseq.settings?.buttons)
       if (buttons?.length) {
         logseq.provideUI({
           key: 'git-popup',

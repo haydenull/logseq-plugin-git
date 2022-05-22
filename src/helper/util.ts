@@ -3,7 +3,7 @@ import { status } from './git'
 
 export const checkStatus = async () => {
   console.log('Checking status...')
-  const statusRes = await status()
+  const statusRes = await status(false)
   if (statusRes?.stdout === '') {
     console.log('No changes', statusRes)
     setPluginStyle(INACTIVE_STYLE)

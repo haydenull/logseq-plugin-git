@@ -92,6 +92,9 @@ ${COMMON_STYLE}
 export const BUTTONS = [
   { key: 'status', title: 'Check Status', event: 'check' },
   { key: 'log', title: 'Show Log', event: 'log' },
+  { key: 'pull', title: 'Pull', event: 'pull' },
+  { key: 'pullRebase', title: 'Pull Rebase', event: 'pullRebase' },
+  { key: 'checkout', title: 'Checkout', event: 'checkout' },
   { key: 'commit', title: 'Commit', event: 'commit' },
   { key: 'push', title: 'Push', event: 'push' },
   { key: 'commitAndPush', title: 'Commit & Push', event: 'commitAndPush' },
