@@ -100,16 +100,8 @@ if (isDevelopment) {
       }
     }, 1000)
 
-    logseq.App.onRouteChanged(async () => {
-      checkStatus()
-    })
-    logseq.DB.onChanged(async () => {
-      setTimeout(() => {
-        checkStatus()
-      }, 1000)
-    })
-
-
+    logseq.App.onRouteChanged(debounce(async () => { checkStatus() }))
+    logseq.DB.onChanged(debounce(async () => { checkStatus() }, 1000))
   })
 }
 
