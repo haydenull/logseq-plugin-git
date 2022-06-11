@@ -109,5 +109,12 @@ export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
     description: 'Select buttons to show',
     enumPicker: 'checkbox',
     enumChoices: BUTTONS.map(({ title }) => title),
+  },
+  {
+    key: 'checkWhenDBChanged',
+    title: 'Check Status when DB Changed',
+    type: 'boolean',
+    default: true,
+    description: 'Check status when DB changed, restart logseq to take effect',
   }
 ]

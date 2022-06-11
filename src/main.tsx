@@ -103,11 +103,14 @@ if (isDevelopment) {
     logseq.App.onRouteChanged(async () => {
       checkStatus()
     })
-    logseq.DB.onChanged(async () => {
-      setTimeout(() => {
-        checkStatus()
-      }, 1000)
-    })
+    if (logseq.settings?.checkWhenDBChanged) {
+      logseq.DB.onChanged(async () => {
+        console.log('[faiz:git] === logseq.DB.onChanged')
+        setTimeout(() => {
+          checkStatus()
+        }, 1000)
+      })
+    }
 
 
   })
