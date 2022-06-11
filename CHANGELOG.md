@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.1.0...v1.2.0) (2022-06-11)
+
+
+### Features
+
+* supports disable checkWhenDBChanged ([85428aa](https://github.com/haydenull/logseq-plugin-git/commit/85428aa217361a797f64c5eadd8a008e39cb49b2))
+
 # [1.1.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.0.2...v1.1.0) (2022-05-22)
 
 
