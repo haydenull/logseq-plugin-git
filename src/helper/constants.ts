@@ -28,6 +28,14 @@ export const COMMON_STYLE = `
   border-width: 0 10px 8px 10px;
   border-color: transparent transparent var(--ls-secondary-background-color) transparent;
 }
+#injected-ui-item-git-logseq-git #logseq-git--git #plugin-git-content-wrapper .plugin-git-mask {
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  top: -36px;
+  left: -80vw;
+}
 `
 
 export const SHOW_POPUP_STYLE = `

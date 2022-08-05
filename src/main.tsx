@@ -22,9 +22,9 @@ if (isDevelopment) {
         console.log('[faiz:] === check click')
         const status = await checkStatus()
         if (status?.stdout === '') {
-          logseq.App.showMsg('No changes detected.')
+          logseq.UI.showMsg('No changes detected.')
         } else {
-          logseq.App.showMsg('Changes detected:\n' + status.stdout, 'error')
+          logseq.UI.showMsg('Changes detected:\n' + status.stdout, 'success', { timeout: 0 })
         }
         hidePopup()
       }),
@@ -67,7 +67,7 @@ if (isDevelopment) {
       log: debounce(async function() {
         console.log('[faiz:] === log click')
         const res = await log(false)
-        logseq.App.showMsg(res?.stdout, 'error')
+        logseq.UI.showMsg(res?.stdout, 'success', { timeout: 0 })
         hidePopup()
       }),
       showPopup: debounce(async function() {
@@ -92,6 +92,7 @@ if (isDevelopment) {
           key: 'git-popup',
           path: '#plugin-git-content-wrapper',
           template: `
+            <div class="plugin-git-mask" data-on-click="hidePopup"></div>
             <div class="plugin-git-popup flex flex-col">
               ${buttons.map(button => '<button data-on-click="' + button?.event + '" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">' + button?.title + '</button>').join('\n')}
             </div>
@@ -109,6 +110,19 @@ if (isDevelopment) {
         setTimeout(() => {
           checkStatus()
         }, 1000)
+      })
+    }
+
+    if (top) {
+      top.document?.addEventListener('visibilitychange', () => {
+        const state = top?.document?.visibilityState
+        if (state === 'visible') {
+          // checkStatus()
+          logseq.UI.showMsg(`Page is visible: ${new Date()}`, 'success', { timeout: 0 })
+        } else if (state === 'hidden') {
+          // hidePopup()
+          logseq.UI.showMsg(`Page is hidden: ${new Date()}`, 'success', { timeout: 0 })
+        }
       })
     }
 
