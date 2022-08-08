@@ -17,7 +17,6 @@ if (isDevelopment) {
 
     const operations = {
       check: debounce(async function() {
-        console.log('[faiz:] === check click')
         const status = await checkStatus()
         if (status?.stdout === '') {
           logseq.UI.showMsg('No changes detected.')
@@ -116,20 +115,40 @@ if (isDevelopment) {
       })
     }
 
-    if (top) {
-      top.document?.addEventListener('visibilitychange', () => {
-        const state = top?.document?.visibilityState
-        if (state === 'visible') {
-          // checkStatus()
-          logseq.UI.showMsg(`Page is visible: ${new Date()}`, 'success', { timeout: 0 })
-          pullRebase()
-        } else if (state === 'hidden') {
-          // hidePopup()
-          logseq.UI.showMsg(`Page is hidden: ${new Date()}`, 'success', { timeout: 0 })
-          operations.commitAndPush()
+    if (top && (logseq.settings?.autoPull || logseq.settings?.autoPush)) {
+      top.document?.addEventListener('visibilitychange', async () => {
+        const visibilityState = top?.document?.visibilityState
+
+        const status = await checkStatus()
+        const changed = status?.stdout !== ''
+        if (visibilityState === 'visible') {
+          // logseq.UI.showMsg(`Page is visible: ${new Date()}`, 'success', { timeout: 0 })
+          if (logseq.settings?.autoPull && !changed) {
+            // noChange: pullRebase
+            operations.pullRebase()
+          } else if (logseq.settings?.autoPush && changed) {
+            // changed: commit pullRebase push
+            operations.commitAndPush()
+          }
+
+        } else if (visibilityState === 'hidden') {
+          // logseq.UI.showMsg(`Page is hidden: ${new Date()}`, 'success', { timeout: 0 })
+          // noChange void
+          // changed commit push
+          if (logseq.settings?.autoPush && changed) {
+            operations.commitAndPush()
+          }
         }
       })
     }
+
+    logseq.App.registerCommandPalette({
+      key: 'logseq-plugin-git:commit&push',
+      label: 'Commit & Push',
+      keybinding: {
+        binding: 'mod+p',
+      },
+    }, () => operations.commitAndPush())
 
 
   })

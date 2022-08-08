@@ -13,6 +13,21 @@ export const status = async (showRes = true): Promise<IGitResult> => {
       logseq.App.showMsg(`Git status failed\n${res.stderr}`, 'error')
     }
   }
+  /**
+   * res
+   * modify
+   * {
+   *  exitCode: 0,
+   *  stderr: '',
+   *  stdout: 'M foo.md\n?? bar.md\n',
+   * }
+   * ahead & uptodate & behind
+   * {
+   * exitCode: 0,
+   * stderr: '',
+   * stdout: '',
+   * }
+   */
   // changed files    staged files
   return res
 }
