@@ -15,9 +15,7 @@ if (isDevelopment) {
   console.log('=== logseq-plugin-git loaded ===')
   logseq.ready(() => {
 
-    checkStatus()
-
-    logseq.provideModel({
+    const operations = {
       check: debounce(async function() {
         console.log('[faiz:] === check click')
         const status = await checkStatus()
@@ -78,7 +76,11 @@ if (isDevelopment) {
         console.log('[faiz:] === hidePopup click')
         hidePopup()
       }),
-    })
+    }
+
+    checkStatus()
+
+    logseq.provideModel(operations)
 
     logseq.App.registerUIItem('toolbar', {
       key: 'git',
@@ -105,10 +107,11 @@ if (isDevelopment) {
       checkStatus()
     })
     if (logseq.settings?.checkWhenDBChanged) {
+      const _checkStatus = debounce(checkStatus, 2000)
       logseq.DB.onChanged(async () => {
         console.log('[faiz:git] === logseq.DB.onChanged')
         setTimeout(() => {
-          checkStatus()
+          _checkStatus()
         }, 1000)
       })
     }
@@ -119,9 +122,11 @@ if (isDevelopment) {
         if (state === 'visible') {
           // checkStatus()
           logseq.UI.showMsg(`Page is visible: ${new Date()}`, 'success', { timeout: 0 })
+          pullRebase()
         } else if (state === 'hidden') {
           // hidePopup()
           logseq.UI.showMsg(`Page is hidden: ${new Date()}`, 'success', { timeout: 0 })
+          operations.commitAndPush()
         }
       })
     }
