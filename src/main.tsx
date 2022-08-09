@@ -2,9 +2,9 @@ import '@logseq/libs'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
-import { BUTTONS, COMMON_STYLE, LOADING_STYLE, SETTINGS_SCHEMA, SHOW_POPUP_STYLE } from './helper/constants'
+import { BUTTONS, LOADING_STYLE, SETTINGS_SCHEMA } from './helper/constants'
 import { checkout, commit, log, pull, pullRebase, push, status } from './helper/git'
-import { checkStatus, debounce, genDBTaskChangeCallback, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
+import { checkStatus, debounce, hidePopup, setPluginStyle, showPopup, checkIsSynced, genDBTaskChangeCallback } from './helper/util'
 import './index.css'
 
 const isDevelopment = import.meta.env.DEV
@@ -114,47 +114,23 @@ if (isDevelopment) {
       })
     }
 
-    // first load
-    async function firstPull() {
-      const status = await checkStatus()
-      if (status?.stdout !== '') {
-        // changed: commit pullRebase
-        await operations.commit()
-        operations.pullRebase()
-      } else {
-        // noChange: pullRebase
-        operations.pullRebase()
-      }
-    }
-    if (logseq.settings?.autoPull) {
-      firstPull()
-    } else {
-      checkStatus()
-    }
+    checkIsSynced()
+    checkStatus()
 
-    if (top && (logseq.settings?.autoPull || logseq.settings?.autoPush)) {
+    if (top) {
       top.document?.addEventListener('visibilitychange', async () => {
         const visibilityState = top?.document?.visibilityState
 
-        const status = await checkStatus()
-        const changed = status?.stdout !== ''
         if (visibilityState === 'visible') {
-          // logseq.UI.showMsg(`Page is visible: ${new Date()}`, 'success', { timeout: 0 })
-          if (logseq.settings?.autoPull && !changed) {
-            // noChange: pullRebase
-            operations.pullRebase()
-          } else if (logseq.settings?.autoPush && changed) {
-            // changed: commit pullRebase
-            await operations.commit()
-            operations.pullRebase()
-          }
-
+          checkIsSynced()
         } else if (visibilityState === 'hidden') {
           // logseq.UI.showMsg(`Page is hidden: ${new Date()}`, 'success', { timeout: 0 })
           // noChange void
           // changed commit push
-          if (logseq.settings?.autoPush && changed) {
-            operations.commitAndPush()
+          if (logseq.settings?.autoPush) {
+            const status = await checkStatus()
+            const changed = status?.stdout !== ''
+            if (changed) operations.commitAndPush()
           }
         }
       })

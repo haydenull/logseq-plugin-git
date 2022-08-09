@@ -126,13 +126,6 @@ export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
     description: 'Check status when DB changed, restart logseq to take effect',
   },
   {
-    key: 'autoPull',
-    title: 'Auto Pull',
-    type: 'boolean',
-    default: false,
-    description: 'Auto pull when logseq show',
-  },
-  {
     key: 'autoPush',
     title: 'Auto Push',
     type: 'boolean',

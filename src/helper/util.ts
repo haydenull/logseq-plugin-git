@@ -67,3 +67,15 @@ export const genDBTaskChangeCallback = (cb: (uuid: string) => void, delay = 2000
     }, delay))
   }
 }
+
+export const isRepoUpTodate = async () => {
+  await logseq.Git.execCommand(['fetch'])
+  const local = await logseq.Git.execCommand(['rev-parse', 'HEAD'])
+  const remote = await logseq.Git.execCommand(['rev-parse', '@{u}'])
+  return local.stdout === remote.stdout
+}
+
+export const checkIsSynced = async () => {
+  const isSynced = await isRepoUpTodate()
+  if (!isSynced) logseq.UI.showMsg(`The current repository is not synchronized with the remote repository, please check.`, 'warning', { timeout: 0 })
+}
