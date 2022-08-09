@@ -57,8 +57,8 @@ if (isDevelopment) {
       commitAndPush: debounce(async function () {
         setPluginStyle(LOADING_STYLE)
         hidePopup()
-        await commit(true, `[logseq-plugin-git:commit] ${new Date().toISOString()}`)
-        await push(true)
+        const res = await commit(true, `[logseq-plugin-git:commit] ${new Date().toISOString()}`)
+        if (res.exitCode === 0) await push(true)
         checkStatus()
       }),
       log: debounce(async function() {
@@ -76,8 +76,6 @@ if (isDevelopment) {
         hidePopup()
       }),
     }
-
-    checkStatus()
 
     logseq.provideModel(operations)
 
@@ -115,6 +113,24 @@ if (isDevelopment) {
       })
     }
 
+    // first load
+    async function firstPull() {
+      const status = await checkStatus()
+      if (status?.stdout !== '') {
+        // changed: commit pullRebase
+        await operations.commit()
+        operations.pullRebase()
+      } else {
+        // noChange: pullRebase
+        operations.pullRebase()
+      }
+    }
+    if (logseq.settings?.autoPull) {
+      firstPull()
+    } else {
+      checkStatus()
+    }
+
     if (top && (logseq.settings?.autoPull || logseq.settings?.autoPush)) {
       top.document?.addEventListener('visibilitychange', async () => {
         const visibilityState = top?.document?.visibilityState
@@ -127,8 +143,9 @@ if (isDevelopment) {
             // noChange: pullRebase
             operations.pullRebase()
           } else if (logseq.settings?.autoPush && changed) {
-            // changed: commit pullRebase push
-            operations.commitAndPush()
+            // changed: commit pullRebase
+            await operations.commit()
+            operations.pullRebase()
           }
 
         } else if (visibilityState === 'hidden') {
@@ -146,7 +163,8 @@ if (isDevelopment) {
       key: 'logseq-plugin-git:commit&push',
       label: 'Commit & Push',
       keybinding: {
-        binding: 'mod+p',
+        binding: 'mod+s',
+        mode: 'global',
       },
     }, () => operations.commitAndPush())
 
