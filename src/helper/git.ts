@@ -101,7 +101,7 @@ export const commit = async (showRes = true, message: string): Promise<IGitResul
     if (res.exitCode === 0) {
       logseq.App.showMsg('Git commit success')
     } else {
-      logseq.App.showMsg(`Git commit failed\n${res.stderr || res.stdout}`, 'error')
+      logseq.App.showMsg(`Git commit failed\n${res.stdout || res.stderr}`, 'error')
     }
   }
   return res

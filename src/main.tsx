@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { BUTTONS, COMMON_STYLE, LOADING_STYLE, SETTINGS_SCHEMA, SHOW_POPUP_STYLE } from './helper/constants'
 import { checkout, commit, log, pull, pullRebase, push, status } from './helper/git'
-import { checkStatus, debounce, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
+import { checkStatus, debounce, genDBTaskChangeCallback, getPluginStyle, hidePopup, setPluginStyle, showPopup } from './helper/util'
 import './index.css'
 
 const isDevelopment = import.meta.env.DEV
@@ -104,12 +104,13 @@ if (isDevelopment) {
       checkStatus()
     })
     if (logseq.settings?.checkWhenDBChanged) {
-      const _checkStatus = debounce(checkStatus, 2000)
-      logseq.DB.onChanged(async () => {
-        console.log('[faiz:git] === logseq.DB.onChanged')
-        setTimeout(() => {
-          _checkStatus()
-        }, 1000)
+      // const _checkStatus = debounce(checkStatus, 2000)
+      logseq.DB.onChanged(({ blocks, txData, txMeta }) => {
+        // console.log('[faiz:git] === logseq.DB.onChanged')
+        // setTimeout(() => {
+        //   _checkStatus()
+        // }, 1000)
+        genDBTaskChangeCallback(checkStatus)?.({ blocks, txData, txMeta })
       })
     }
 

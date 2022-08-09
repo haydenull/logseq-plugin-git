@@ -48,3 +48,22 @@ export const debounce = (fn, wait: number = 100, environment?: any) => {
     }, wait)
   }
 }
+
+let DBChangeTimerIDMap = new Map<string, number>()
+export const genDBTaskChangeCallback = (cb: (uuid: string) => void, delay = 2000) => {
+  return ({ blocks, txData, txMeta }) => {
+    const { marker, properties, uuid } = blocks[0]
+    if (!marker || !properties?.todoistId || !uuid) return
+    const timerId = DBChangeTimerIDMap.get(uuid)
+    if (timerId) clearInterval(timerId)
+    DBChangeTimerIDMap.set(uuid, window.setInterval(async () => {
+      const checking = await logseq.Editor.checkEditing()
+      if (checking !== uuid) {
+        // when this block is not in editting state
+        const _timerId = DBChangeTimerIDMap.get(uuid)
+        clearInterval(_timerId)
+        cb(uuid)
+      }
+    }, delay))
+  }
+}
