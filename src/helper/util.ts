@@ -1,7 +1,7 @@
 import { ACTIVE_STYLE, HIDE_POPUP_STYLE, INACTIVE_STYLE, SHOW_POPUP_STYLE } from './constants'
 import { status } from './git'
 
-export const checkStatus = async () => {
+export const checkStatus = async (needCheckFlag = false) => {
   console.log('Checking status...')
   const statusRes = await status(false)
   if (statusRes?.stdout === '') {
@@ -11,6 +11,7 @@ export const checkStatus = async () => {
     console.log('Need save', statusRes)
     setPluginStyle(ACTIVE_STYLE)
   }
+  if (needCheckFlag) window.needCheck = false
   return statusRes
 }
 
@@ -32,7 +33,7 @@ export const hidePopup = () => {
 }
 
 
-export const debounce = (fn, wait: number = 100, environment?: any) => {
+export const debounce = (fn, wait: number = 2000, environment?: any) => {
   let timer = null
   return function() {
     // @ts-ignore
@@ -49,24 +50,9 @@ export const debounce = (fn, wait: number = 100, environment?: any) => {
   }
 }
 
-let DBChangeTimerIDMap = new Map<string, number>()
-export const genDBTaskChangeCallback = (cb: (uuid: string) => void, delay = 2000) => {
-  return ({ blocks, txData, txMeta }) => {
-    const { marker, properties, uuid } = blocks[0]
-    if (!marker || !properties?.todoistId || !uuid) return
-    const timerId = DBChangeTimerIDMap.get(uuid)
-    if (timerId) clearInterval(timerId)
-    DBChangeTimerIDMap.set(uuid, window.setInterval(async () => {
-      const checking = await logseq.Editor.checkEditing()
-      if (checking !== uuid) {
-        // when this block is not in editting state
-        const _timerId = DBChangeTimerIDMap.get(uuid)
-        clearInterval(_timerId)
-        cb(uuid)
-      }
-    }, delay))
-  }
-}
+export const checkStatusWithDebounce = debounce(() => {
+  if (window.needCheck !== false) checkStatus(true)
+}, 2000)
 
 export const isRepoUpTodate = async () => {
   await logseq.Git.execCommand(['fetch'])

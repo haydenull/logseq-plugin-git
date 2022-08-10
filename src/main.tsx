@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import { BUTTONS, LOADING_STYLE, SETTINGS_SCHEMA } from './helper/constants'
 import { checkout, commit, log, pull, pullRebase, push, status } from './helper/git'
-import { checkStatus, debounce, hidePopup, setPluginStyle, showPopup, checkIsSynced, genDBTaskChangeCallback } from './helper/util'
+import { checkStatus, debounce, hidePopup, setPluginStyle, showPopup, checkIsSynced, checkStatusWithDebounce } from './helper/util'
 import './index.css'
 
 const isDevelopment = import.meta.env.DEV
@@ -101,21 +101,16 @@ if (isDevelopment) {
     }, 1000)
 
     logseq.App.onRouteChanged(async () => {
-      checkStatus()
+      checkStatusWithDebounce()
     })
     if (logseq.settings?.checkWhenDBChanged) {
-      // const _checkStatus = debounce(checkStatus, 2000)
       logseq.DB.onChanged(({ blocks, txData, txMeta }) => {
-        // console.log('[faiz:git] === logseq.DB.onChanged')
-        // setTimeout(() => {
-        //   _checkStatus()
-        // }, 1000)
-        genDBTaskChangeCallback(checkStatus)?.({ blocks, txData, txMeta })
+        checkStatusWithDebounce()
       })
     }
 
     checkIsSynced()
-    checkStatus()
+    checkStatusWithDebounce()
 
     if (top) {
       top.document?.addEventListener('visibilitychange', async () => {
