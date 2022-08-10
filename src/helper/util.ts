@@ -1,7 +1,7 @@
 import { ACTIVE_STYLE, HIDE_POPUP_STYLE, INACTIVE_STYLE, SHOW_POPUP_STYLE } from './constants'
 import { status } from './git'
 
-export const checkStatus = async (needCheckFlag = false) => {
+export const checkStatus = async () => {
   console.log('Checking status...')
   const statusRes = await status(false)
   if (statusRes?.stdout === '') {
@@ -11,7 +11,6 @@ export const checkStatus = async (needCheckFlag = false) => {
     console.log('Need save', statusRes)
     setPluginStyle(ACTIVE_STYLE)
   }
-  if (needCheckFlag) window.needCheck = false
   return statusRes
 }
 
@@ -33,7 +32,7 @@ export const hidePopup = () => {
 }
 
 
-export const debounce = (fn, wait: number = 2000, environment?: any) => {
+export const debounce = (fn, wait: number = 100, environment?: any) => {
   let timer = null
   return function() {
     // @ts-ignore
@@ -51,7 +50,7 @@ export const debounce = (fn, wait: number = 2000, environment?: any) => {
 }
 
 export const checkStatusWithDebounce = debounce(() => {
-  if (window.needCheck !== false) checkStatus(true)
+  checkStatus()
 }, 2000)
 
 export const isRepoUpTodate = async () => {
