@@ -113,7 +113,7 @@ export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
     key: 'buttons',
     title: 'Buttons',
     type: 'enum',
-    default: ['Check Status', 'Show Log', 'Commit & Push'],
+    default: ['Check Status', 'Show Log', 'Pull Rebase', 'Commit & Push'],
     description: 'Select buttons to show',
     enumPicker: 'checkbox',
     enumChoices: BUTTONS.map(({ title }) => title),
