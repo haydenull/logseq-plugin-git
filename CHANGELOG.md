@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.2.0...v1.3.0) (2022-08-19)
+
+
+### Features
+
+* add default value: pull rebase ([90862ba](https://github.com/haydenull/logseq-plugin-git/commit/90862ba1d2d0d258c6d7b7a58f552fb0187f2df9))
+
 # [1.2.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.1.0...v1.2.0) (2022-06-11)
 
 
