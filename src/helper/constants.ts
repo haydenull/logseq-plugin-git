@@ -28,6 +28,14 @@ export const COMMON_STYLE = `
   border-width: 0 10px 8px 10px;
   border-color: transparent transparent var(--ls-secondary-background-color) transparent;
 }
+#injected-ui-item-git-logseq-git #logseq-git--git #plugin-git-content-wrapper .plugin-git-mask {
+  position: absolute;
+  z-index: -1;
+  width: 100vw;
+  height: 100vh;
+  top: -36px;
+  left: -80vw;
+}
 `
 
 export const SHOW_POPUP_STYLE = `
@@ -105,7 +113,7 @@ export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
     key: 'buttons',
     title: 'Buttons',
     type: 'enum',
-    default: ['Check Status', 'Show Log', 'Commit & Push'],
+    default: ['Check Status', 'Show Log', 'Pull Rebase', 'Commit & Push'],
     description: 'Select buttons to show',
     enumPicker: 'checkbox',
     enumChoices: BUTTONS.map(({ title }) => title),
@@ -116,5 +124,12 @@ export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
     type: 'boolean',
     default: true,
     description: 'Check status when DB changed, restart logseq to take effect',
-  }
+  },
+  {
+    key: 'autoPush',
+    title: 'Auto Push',
+    type: 'boolean',
+    default: false,
+    description: 'Auto push when logseq hide',
+  },
 ]

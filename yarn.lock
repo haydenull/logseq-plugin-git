@@ -392,10 +392,10 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@logseq/libs@^0.0.3":
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/@logseq/libs/-/libs-0.0.3.tgz#a704407cc18df371ace92bd0c6049c977fd3f75a"
-  integrity sha512-t14ZTRinspBhX3bjnTn6unwtpPDwct2Hmn+ad+CslQCHq61QUgRNXSSCB1rz2f/cNgmYqILxxrjAqH6YsF252A==
+"@logseq/libs@^0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@logseq/libs/-/libs-0.0.6.tgz#a8270d5bd71bccf13455634f9a2aac2572a0b935"
+  integrity sha512-0Fv+Wdno5m0EA9xW6tRRvoKNPAF5nznpi6A1bBjh8aq4XMt7rGvhHbsH+u84/nswCYlce3t2Q/ei8CRK8iWbdw==
   dependencies:
     csstype "3.0.8"
     debug "4.3.1"
