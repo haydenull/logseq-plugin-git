@@ -126,6 +126,13 @@ export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
     description: 'Check status when DB changed, restart logseq to take effect',
   },
   {
+    key: 'autoCheckSynced',
+    title: 'Auto Check If Synced',
+    type: 'boolean',
+    default: false,
+    description: 'Automatically check if the local version is the same as the remote',
+  },
+  {
     key: 'autoPush',
     title: 'Auto Push',
     type: 'boolean',

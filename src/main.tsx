@@ -109,7 +109,7 @@ if (isDevelopment) {
       })
     }
 
-    checkIsSynced()
+    if (logseq.settings?.autoCheckSynced) checkIsSynced()
     checkStatusWithDebounce()
 
     if (top) {
@@ -117,7 +117,7 @@ if (isDevelopment) {
         const visibilityState = top?.document?.visibilityState
 
         if (visibilityState === 'visible') {
-          checkIsSynced()
+          if (logseq.settings?.autoCheckSynced) checkIsSynced()
         } else if (visibilityState === 'hidden') {
           // logseq.UI.showMsg(`Page is hidden: ${new Date()}`, 'success', { timeout: 0 })
           // noChange void
