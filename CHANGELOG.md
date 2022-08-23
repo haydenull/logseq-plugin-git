@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.3.0...v1.4.0) (2022-08-23)
+
+
+### Features
+
+* ✨ Support for turning off auto-check sync ([a2ac2bd](https://github.com/haydenull/logseq-plugin-git/commit/a2ac2bd44cd9685c15827bdb82bdec6c18139823))
+
 # [1.3.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.2.0...v1.3.0) (2022-08-19)
 
 
