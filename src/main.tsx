@@ -93,7 +93,7 @@ if (isDevelopment) {
           template: `
             <div class="plugin-git-mask" data-on-click="hidePopup"></div>
             <div class="plugin-git-popup flex flex-col">
-              ${buttons.map(button => '<button data-on-click="' + button?.event + '" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1 m-1">' + button?.title + '</button>').join('\n')}
+              ${buttons.map(button => '<button data-on-click="' + button?.event + '" class="ui__button bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1" style="margin: 4px 0;">' + button?.title + '</button>').join('\n')}
             </div>
           `,
         })

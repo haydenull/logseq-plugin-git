@@ -34,7 +34,7 @@ export const COMMON_STYLE = `
   width: 100vw;
   height: 100vh;
   top: -36px;
-  left: -80vw;
+  left: -70vw;
 }
 `
 
