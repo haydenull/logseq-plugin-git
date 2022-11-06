@@ -1,3 +1,10 @@
+## [1.4.2](https://github.com/haydenull/logseq-plugin-git/compare/v1.4.1...v1.4.2) (2022-11-06)
+
+
+### Bug Fixes
+
+* button color ([d3a5bd1](https://github.com/haydenull/logseq-plugin-git/commit/d3a5bd169ee74634983c04f160677a9f34f8971e))
+
 ## [1.4.1](https://github.com/haydenull/logseq-plugin-git/compare/v1.4.0...v1.4.1) (2022-11-01)
 
 
