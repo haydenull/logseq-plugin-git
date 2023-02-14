@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.4.2...v1.5.0) (2023-02-14)
+
+
+### Features
+
+* logseq sdk version ([#26](https://github.com/haydenull/logseq-plugin-git/issues/26)) ([d616d82](https://github.com/haydenull/logseq-plugin-git/commit/d616d820df800809cdc37e718fa0a43ff380498b))
+
 ## [1.4.2](https://github.com/haydenull/logseq-plugin-git/compare/v1.4.1...v1.4.2) (2022-11-06)
 
 
