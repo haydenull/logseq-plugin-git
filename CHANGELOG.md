@@ -1,3 +1,10 @@
+## [1.5.1](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.0...v1.5.1) (2023-04-16)
+
+
+### Bug Fixes
+
+* In the Logseq 0.9.2 version, there is an issue with the panel display that needs to be fixed. ([a81bceb](https://github.com/haydenull/logseq-plugin-git/commit/a81bceb10996a6e3d3901fe1f1fef63d6d1c4052))
+
 # [1.5.0](https://github.com/haydenull/logseq-plugin-git/compare/v1.4.2...v1.5.0) (2023-02-14)
 
 
