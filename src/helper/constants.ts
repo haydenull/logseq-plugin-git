@@ -4,6 +4,9 @@ export const COMMON_STYLE = `
 #injected-ui-item-git-logseq-git {
   position: relative;
 }
+.plugin-git-container {
+  display: none;
+}
 .plugin-git-container .plugin-git-mask {
   position: fixed;
   width: 100vw;
