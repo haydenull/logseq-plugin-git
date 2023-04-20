@@ -1,3 +1,10 @@
+## [1.5.2](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.1...v1.5.2) (2023-04-20)
+
+
+### Bug Fixes
+
+* :bug: the mask was not turned off after initilization ([a84acb5](https://github.com/haydenull/logseq-plugin-git/commit/a84acb5a7133da1f0693c15112ab5c903f0a1774))
+
 ## [1.5.1](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.0...v1.5.1) (2023-04-16)
 
 
