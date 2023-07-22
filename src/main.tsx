@@ -190,6 +190,17 @@ if (isDevelopment) {
       },
       () => operations.commitAndPush()
     );
+    logseq.App.registerCommandPalette(
+        {
+          key: "logseq-plugin-git:rebase",
+          label: "Pull Rebase",
+          keybinding: {
+            binding: "mod+alt+s",
+            mode: "global",
+          },
+        },
+        () => operations.pullRebase()
+    );
   });
 }
 
