@@ -75,11 +75,16 @@ if (isDevelopment) {
       commitAndPush: debounce(async function () {
         setPluginStyle(LOADING_STYLE);
         hidePopup();
-        const res = await commit(
-          true,
-          `[logseq-plugin-git:commit] ${new Date().toISOString()}`
-        );
-        if (res.exitCode === 0) await push(true);
+
+        const status = await checkStatus();
+        const changed = status?.stdout !== "";
+        if (changed) {
+          const res = await commit(
+              true,
+              `[logseq-plugin-git:commit] ${new Date().toISOString()}`
+          );
+          if (res.exitCode === 0) await push(true);
+        }
         checkStatus();
       }),
       log: debounce(async function () {
@@ -168,9 +173,7 @@ if (isDevelopment) {
           // noChange void
           // changed commit push
           if (logseq.settings?.autoPush) {
-            const status = await checkStatus();
-            const changed = status?.stdout !== "";
-            if (changed) operations.commitAndPush();
+            operations.commitAndPush();
           }
         }
       });
