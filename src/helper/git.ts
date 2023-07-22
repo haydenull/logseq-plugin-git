@@ -1,10 +1,29 @@
 // https://logseq.github.io/plugins/interfaces/IAppProxy.html#execGitCommand
 import type { IGitResult } from "@logseq/libs/dist/LSPlugin.user"
 
+let _inProgress: Promise<IGitResult> | undefined = undefined
+
+export const execGitCommand = async (args: string[]) : Promise<IGitResult> => {
+  if (_inProgress) await _inProgress
+
+  let res
+  try {
+    const currentGitFolder = (await logseq.App.getCurrentGraph())?.path
+    const runArgs = currentGitFolder ? ['-C', currentGitFolder, ...args] : args
+    _inProgress = logseq.Git.execCommand(runArgs)
+    res = await _inProgress
+  } finally {
+    _inProgress = undefined
+  }
+    return res
+}
+
+export const inProgress = () => true
+
 export const status = async (showRes = true): Promise<IGitResult> => {
   // git status --porcelain | awk '{print $2}'
   // git status --porcelain | wc -l
-  const res =  await logseq.Git.execCommand(['status', '--porcelain'])
+  const res =  await execGitCommand(['status', '--porcelain'])
   console.log('[faiz:] === git status', res)
   if (showRes) {
     if (res.exitCode === 0) {
@@ -37,7 +56,7 @@ export const log = async (showRes = true): Promise<IGitResult> => {
   // git log --pretty=format:"%h %s" -n 1
   // git log --pretty=format:"%h %ad | %s%d [%an]" --date=short
   // return await logseq.App.execGitCommand(['log', '--pretty=format:"%h %s"'])
-  const res = await logseq.Git.execCommand(['log', '--pretty=format:"%h %ad | %s [%an]"', '--date=format:"%Y-%m-%d %H:%M:%S"', '--name-status'])
+  const res = await execGitCommand(['log', '--pretty=format:"%h %ad | %s [%an]"', '--date=format:"%Y-%m-%d %H:%M:%S"', '--name-status'])
   console.log('[faiz:] === git log', res)
   if (showRes) {
     if (res.exitCode === 0) {
@@ -51,7 +70,7 @@ export const log = async (showRes = true): Promise<IGitResult> => {
 
 // git pull
 export const pull = async (showRes = true): Promise<IGitResult> => {
-  const res = await logseq.Git.execCommand(['pull'])
+  const res = await execGitCommand(['pull'])
   console.log('[faiz:] === git pull', res)
   if (showRes) {
     if (res.exitCode === 0) {
@@ -65,7 +84,7 @@ export const pull = async (showRes = true): Promise<IGitResult> => {
 
 // git pull --rebase
 export const pullRebase = async (showRes = true): Promise<IGitResult> => {
-  const res = await logseq.Git.execCommand(['pull', '--rebase'])
+  const res = await execGitCommand(['pull', '--rebase'])
   console.log('[faiz:] === git pull --rebase', res)
   if (showRes) {
     if (res.exitCode === 0) {
@@ -79,7 +98,7 @@ export const pullRebase = async (showRes = true): Promise<IGitResult> => {
 
 // git checkout .
 export const checkout = async (showRes = true): Promise<IGitResult> => {
-  const res = await logseq.Git.execCommand(['checkout', '.'])
+  const res = await execGitCommand(['checkout', '.'])
   console.log('[faiz:] === git checkout .', res)
   if (showRes) {
     if (res.exitCode === 0) {
@@ -93,9 +112,9 @@ export const checkout = async (showRes = true): Promise<IGitResult> => {
 
 // git commit
 export const commit = async (showRes = true, message: string): Promise<IGitResult> => {
-  await logseq.Git.execCommand(['add', '.'])
+  await execGitCommand(['add', '.'])
   // git commit -m "message"
-  const res = await logseq.Git.execCommand(['commit', '-m', message])
+  const res = await execGitCommand(['commit', '-m', message])
   console.log('[faiz:] === git commit', res)
   if (showRes) {
     if (res.exitCode === 0) {
@@ -110,7 +129,7 @@ export const commit = async (showRes = true, message: string): Promise<IGitResul
 // push
 export const push = async (showRes = true): Promise<IGitResult> => {
   // git push
-  const res = await logseq.Git.execCommand(['push'])
+  const res = await execGitCommand(['push'])
   console.log('[faiz:] === git push', res)
   if (showRes) {
     if (res.exitCode === 0) {

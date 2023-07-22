@@ -4,7 +4,7 @@ import {
   INACTIVE_STYLE,
   SHOW_POPUP_STYLE,
 } from "./constants";
-import { status } from "./git";
+import { status, inProgress, execGitCommand } from "./git";
 
 export const checkStatus = async () => {
   console.log("Checking status...");
@@ -69,13 +69,19 @@ export const checkStatusWithDebounce = debounce(() => {
 }, 2000);
 
 export const isRepoUpTodate = async () => {
-  await logseq.Git.execCommand(["fetch"]);
-  const local = await logseq.Git.execCommand(["rev-parse", "HEAD"]);
-  const remote = await logseq.Git.execCommand(["rev-parse", "@{u}"]);
+  await execGitCommand(["fetch"]);
+  const local = await execGitCommand(["rev-parse", "HEAD"]);
+  const remote = await execGitCommand(["rev-parse", "@{u}"]);
+  logseq.UI.showMsg(`${local.stdout} === ${remote.stdout}`, "success", { timeout: 30 });
   return local.stdout === remote.stdout;
 };
 
 export const checkIsSynced = async () => {
+  if (inProgress()) {
+    console.log("[faiz:] === checkIsSynced Git in progress, skip check");
+    return
+  }
+
   const isSynced = await isRepoUpTodate();
   if (!isSynced)
     logseq.UI.showMsg(
