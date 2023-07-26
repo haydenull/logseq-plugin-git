@@ -1,3 +1,11 @@
+## [1.5.3](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.2...v1.5.3) (2023-07-26)
+
+
+### Bug Fixes
+
+* [#30](https://github.com/haydenull/logseq-plugin-git/issues/30), shortcut mod+alt+s will pull rebase ([5f42bd5](https://github.com/haydenull/logseq-plugin-git/commit/5f42bd5674cdcdff6ae60e789ddf9bc66223ed38))
+* stack git operations not to get errors when auto actions are already performing ([e78bb2c](https://github.com/haydenull/logseq-plugin-git/commit/e78bb2c185787e731cb7b1af07487b6901389396)), closes [#34](https://github.com/haydenull/logseq-plugin-git/issues/34)
+
 ## [1.5.2](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.1...v1.5.2) (2023-04-20)
 
 
