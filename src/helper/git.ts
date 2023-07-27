@@ -18,7 +18,7 @@ export const execGitCommand = async (args: string[]) : Promise<IGitResult> => {
     return res
 }
 
-export const inProgress = () => true
+export const inProgress = () => _inProgress
 
 export const status = async (showRes = true): Promise<IGitResult> => {
   // git status --porcelain | awk '{print $2}'
