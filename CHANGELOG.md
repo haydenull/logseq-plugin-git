@@ -1,3 +1,10 @@
+## [1.5.4](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.3...v1.5.4) (2023-07-27)
+
+
+### Bug Fixes
+
+* exported inProcess() was not set correctly breaking checkIsSynced ([#37](https://github.com/haydenull/logseq-plugin-git/issues/37)) ([cf78518](https://github.com/haydenull/logseq-plugin-git/commit/cf785180e4f68e589a153b71056a2fe1163fade6))
+
 ## [1.5.3](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.2...v1.5.3) (2023-07-26)
 
 
