@@ -10,7 +10,9 @@ export enum GIT_STATUS {
   LocalError = 8,
   RemoteChanges = 16,
   RemoteOk = 17,
-  RemoteError = 32
+  RemoteError = 32,
+  Loading = 64,
+  MenuOpen = 128
 }
 export const SETTING_GRAPH_GIT_ENABLED = "plugin-git/enabled";
 

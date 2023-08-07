@@ -2,8 +2,9 @@ import { ACTIVE_STYLE, GIT_STATUS, INACTIVE_STYLE } from "./constants";
 import { debounce, logDebug, logWarn } from "./util";
 
 let gitStatus = 0;
-let pluginStyle = "";
-let isLoading = false;
+let loadingCount = 0;
+let popupLeft = 0;
+let popupTop = 0;
 
 const COMMON_STYLE = `
 #injected-ui-item-git-logseq-git {
@@ -44,7 +45,6 @@ const COMMON_STYLE = `
 `;
 
 const DISABLED_STYLE = `
-${COMMON_STYLE}
 #injected-ui-item-git-logseq-git::after {
   display: none;
 }
@@ -101,9 +101,24 @@ const LOCAL_CHANGED_OR_ERROR_STYLE = `
 }
 `;
 
-export const SHOW_POPUP_STYLE = `
+export const SHOW_POPUP_STYLE = () => `
 .plugin-git-container {
   display: block;
+}
+.plugin-git-popup{
+  left:${popupLeft}px;
+  top:${popupTop}px;
+}
+`;
+
+export const LOADING_STYLE = `
+#injected-ui-item-git-logseq-git .ti-brand-git:before {
+  animation: blinker 1s linear infinite;
+}
+@keyframes blinker {
+  50% {
+    opacity: 0;
+  }
 }
 `;
 
@@ -137,11 +152,11 @@ export const setGitStateChange = (statusChange: GIT_STATUS) => {
       break;
   }
 
-  logWarn("setGitStateChange =", GIT_STATUS[statusChange], gitStatus);
+  logDebug("setGitStateChange =", GIT_STATUS[statusChange], gitStatus);
   setStatusToStyle();
 };
 
-const setStatusToStyle = debounce(() => {
+const setStatusToStyle = () => {
   if ((gitStatus & GIT_STATUS.LocalInUse) === 0) {
     _setPluginStyle(DISABLED_STYLE);
     return;
@@ -169,63 +184,69 @@ const setStatusToStyle = debounce(() => {
     }
   }
 
-  _setPluginStyle(`${COMMON_STYLE}\n${localStyle}\n${remoteStyle}`);
-}, 100);
+  _setPluginStyle(`${localStyle}\n${remoteStyle}`);
+};
 
 export const _setPluginStyle = (style: string) => {
-  pluginStyle = style;
-  logseq.provideStyle({ key: "git", style });
-  isLoading = false;
+  const addStyle: string[] = [];
+
+  if (gitStatus & GIT_STATUS.MenuOpen) {
+    addStyle.push(SHOW_POPUP_STYLE());
+  }
+
+  if (gitStatus & GIT_STATUS.Loading) {
+    addStyle.push(LOADING_STYLE);
+  }
+
+  logseq.provideStyle({
+    key: "git",
+    style: `${COMMON_STYLE}\n${style}\n${addStyle.join("\n")}`
+  });
 };
-export const setPluginStyleRaw = (style: string) => {
-  // TODO addPopupStyle
-  logDebug("setPluginStyleRaw");
-  logseq.provideStyle({ key: "git", style });
-  if (isLoading) {
-    addLoadingStyle();
+
+const loadingStart = () => {
+  loadingCount += 1;
+  if (loadingCount === 1) {
+    logDebug("loading = START");
+    gitStatus = gitStatus | GIT_STATUS.Loading;
+    setStatusToStyle();
   }
 };
-export const getCurrentStyle = () => pluginStyle;
-export const addLoadingStyle = () => {
-  if (!isLoading) {
-    logDebug("activate LOADING style");
-    const style =
-      getCurrentStyle() +
-      `
-#injected-ui-item-git-logseq-git .ti-brand-git:before {
-  animation: blinker 1s linear infinite;
-}
-@keyframes blinker {
-  50% {
-    opacity: 0;
+
+const loadingEnd = () => {
+  loadingCount -= 1;
+  if (loadingCount === 0) {
+    logDebug("loading = END");
+    gitStatus = gitStatus & ~GIT_STATUS.Loading;
+    setStatusToStyle();
   }
-}
-`;
-    logseq.provideStyle({ key: "git", style });
-    isLoading = true;
+};
+export const loadingEffect = async fn => {
+  let ret;
+  loadingStart();
+  try {
+    ret = await fn();
+  } finally {
+    loadingEnd();
   }
+  return ret;
 };
 
 export const showPopup = () => {
+  logDebug("showPopup");
   logseq.App.queryElementRect("#logseq-git--git").then(triggerIconRect => {
-    logDebug("triggerIconRect", triggerIconRect);
+    // logDebug("triggerIconRect", triggerIconRect);
     if (!triggerIconRect) return;
     const popupWidth = 120 + 10 * 2;
-    const left =
+    popupLeft =
       triggerIconRect.left + triggerIconRect.width / 2 - popupWidth / 2;
-    const top = triggerIconRect.top + triggerIconRect.height;
-    const _style = getCurrentStyle();
-    setPluginStyleRaw(
-      `${_style}\n${SHOW_POPUP_STYLE}\n.plugin-git-popup{left:${left}px;top:${top}px;}`
-    );
+    popupTop = triggerIconRect.top + triggerIconRect.height;
+    gitStatus = gitStatus | GIT_STATUS.MenuOpen;
+    setStatusToStyle();
   });
-  const _style = getCurrentStyle();
-  setPluginStyleRaw(`${_style}\n${SHOW_POPUP_STYLE}`);
 };
 export const hidePopup = () => {
-  // const _style = getPluginStyle();
-  // setPluginStyle(`${_style}\n${HIDE_POPUP_STYLE}`);
-
-  const _style = getCurrentStyle();
-  setPluginStyleRaw(`${_style}`);
+  logDebug("hidePopup");
+  gitStatus = gitStatus & ~GIT_STATUS.MenuOpen;
+  setStatusToStyle();
 };

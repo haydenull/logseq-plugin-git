@@ -23,7 +23,7 @@ import {
   SimpleCommandKeybinding
 } from "@logseq/libs/dist/LSPlugin";
 import {
-  addLoadingStyle,
+  loadingEffect,
   setGitStateChange,
   hidePopup,
   showPopup
@@ -40,31 +40,32 @@ export function isEnabledInThisWindow() {
 
 export const checkStatus = async () => {
   logInfo("checkStatus...");
-  addLoadingStyle();
-  const statusRes = await status(false);
-  // sleep for 10 seconds to test slow operation
-  // await new Promise(resolve => setTimeout(resolve, 10000));
+  return loadingEffect(async () => {
+    const statusRes = await status(false);
+    // sleep for 10 seconds to test slow operation
+    // await new Promise(resolve => setTimeout(resolve, 10000));
 
-  const graph = await logseq.App.getCurrentGraph();
-  if (graph?.path !== statusRes?.graphPath) {
-    logWarn(
-      "graph path changed, status is not actual",
-      graph?.path,
-      statusRes?.graphPath
-    );
-    return;
-  }
+    const graph = await logseq.App.getCurrentGraph();
+    if (graph?.path !== statusRes?.graphPath) {
+      logWarn(
+        "graph path changed, status is not actual",
+        graph?.path,
+        statusRes?.graphPath
+      );
+      return;
+    }
 
-  if (!statusRes?.isOk) {
-    setGitStateChange(GIT_STATUS.LocalError);
-  } else if (statusRes?.stdout === "") {
-    logDebug("No changes", statusRes);
-    setGitStateChange(GIT_STATUS.LocalOk);
-  } else {
-    logDebug("Need save", statusRes);
-    setGitStateChange(GIT_STATUS.LocalChanges);
-  }
-  return statusRes;
+    if (!statusRes?.isOk) {
+      setGitStateChange(GIT_STATUS.LocalError);
+    } else if (statusRes?.stdout === "") {
+      logDebug("No changes", statusRes);
+      setGitStateChange(GIT_STATUS.LocalOk);
+    } else {
+      logDebug("Need save", statusRes);
+      setGitStateChange(GIT_STATUS.LocalChanges);
+    }
+    return statusRes;
+  });
 };
 
 export const isRepoUpTodate = async () => {
@@ -106,14 +107,15 @@ export const checkIsRemoteSynced = async () => {
   }
 };
 
-export const checkStatusWithDebounce = debounce((perform = true) => {
+export const checkStatusWithDebounce = debounce(async (perform = true) => {
   if (perform) {
     if (isEnabledInThisWindow()) {
-      checkStatus();
+      const waitFor = [checkStatus()];
       if (gitConfiguration.hasRemote) {
         // TODO this should be reworked
-        checkIsRemoteSynced();
+        waitFor.push(checkIsRemoteSynced());
       }
+      await Promise.all(waitFor);
     }
   } else {
     logDebug("clear checkStatusWithDebounce");
@@ -140,73 +142,82 @@ export const operations = {
     await initPluginBasedOnRepoState(false);
   }),
   check: debounce(async function () {
-    const status = await checkStatus();
-    if (status?.stdout === "") {
-      logseq.UI.showMsg("No changes detected.");
-    } else {
-      logseq.UI.showMsg("Changes detected:\n" + status?.stdout, "success", {
-        timeout: 0
-      });
-    }
     hidePopup();
+    await loadingEffect(async () => {
+      const status = await checkStatus();
+      if (status?.stdout === "") {
+        logseq.UI.showMsg("No changes detected.");
+      } else {
+        logseq.UI.showMsg("Changes detected:\n" + status?.stdout, "success", {
+          timeout: 0
+        });
+      }
+    });
   }),
   pull: debounce(async function () {
     console.log("[faiz:] === pull click");
-    addLoadingStyle();
     hidePopup();
-    await pull(false);
-    checkStatus();
+    await loadingEffect(async () => {
+      await pull(false);
+      await checkStatus();
+    });
   }),
   pullRebase: debounce(async function () {
     console.log("[faiz:] === pullRebase click");
-    addLoadingStyle();
     hidePopup();
-    await pullRebase();
-    checkStatus();
+    await loadingEffect(async () => {
+      await pullRebase();
+      await checkStatus();
+    });
   }),
   checkout: debounce(async function () {
     console.log("[faiz:] === checkout click");
     hidePopup();
-    checkout();
+    await loadingEffect(async () => {
+      await checkout();
+    });
   }),
   commit: debounce(async function () {
     hidePopup();
-    addLoadingStyle();
-    await commit();
-    await checkStatus();
+    await loadingEffect(async () => {
+      await commit();
+      await checkStatus();
+    });
   }),
   push: debounce(async function () {
-    addLoadingStyle();
     hidePopup();
-    await push();
-    checkStatus();
+    await loadingEffect(async () => {
+      await push();
+      await checkStatus();
+    });
   }),
   commitAndPush: debounce(async function () {
-    addLoadingStyle();
     hidePopup();
-
-    const status = await checkStatus();
-    const changed = status?.stdout !== "";
-    if (changed) {
-      const res = await commit(
-        `[logseq-plugin-git:commit] ${new Date().toISOString()}`
-      );
-      if (res.exitCode === 0) await push(true);
-    }
-    checkStatus();
+    await loadingEffect(async () => {
+      const status = await checkStatus();
+      const changed = status?.stdout !== "";
+      if (changed) {
+        const res = await commit(
+          `[logseq-plugin-git:commit] ${new Date().toISOString()}`
+        );
+        if (res.exitCode === 0) await push(true);
+      }
+      await checkStatus();
+    });
   }),
   sync: debounce(async function () {
-    addLoadingStyle();
     hidePopup();
-    await sync();
-    // TODO this should be reworked and remote git check should be enforced because it is relevant
-    checkStatusWithDebounce();
+    await loadingEffect(async () => {
+      await sync();
+      // TODO this should be reworked and remote git check should be enforced because it is relevant
+      await checkStatusWithDebounce();
+    });
   }),
   log: debounce(async function () {
     console.log("[faiz:] === log click");
+    hidePopup();
     const res = await log(false);
     logseq.UI.showMsg(res?.stdout, "success", { timeout: 0 });
-    hidePopup();
   }),
   showPopup: debounce(async function () {
     console.log("[faiz:] === showPopup click");
@@ -357,8 +368,9 @@ async function initPluginBasedOnRepoState(
 
     // at this point we doesn't have information about repo state
     setGitStateChange(GIT_STATUS.Unknown);
-    addLoadingStyle();
-    checkStatusWithDebounce();
+    loadingEffect(async () => {
+      await checkStatusWithDebounce();
+    });
 
     logDebug("registering routeChangedHandler");
     routeChangedHandler = logseq.App.onRouteChanged(async () => {
