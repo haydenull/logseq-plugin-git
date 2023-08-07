@@ -110,12 +110,16 @@ export const checkIsRemoteSynced = async () => {
 export const checkStatusWithDebounce = debounce(async (perform = true) => {
   if (perform) {
     if (isEnabledInThisWindow()) {
-      const waitFor = [checkStatus()];
-      if (gitConfiguration.hasRemote) {
-        // TODO this should be reworked
-        waitFor.push(checkIsRemoteSynced());
-      }
-      await Promise.all(waitFor);
+      logDebug("checkStatusWithDebounce = START");
+      await loadingEffect(async () => {
+        const waitFor = [checkStatus()];
+        if (gitConfiguration.hasRemote) {
+          // TODO this should be reworked
+          waitFor.push(checkIsRemoteSynced());
+        }
+        await Promise.all(waitFor);
+      });
+      logDebug("checkStatusWithDebounce = END");
     }
   } else {
     logDebug("clear checkStatusWithDebounce");

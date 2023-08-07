@@ -56,6 +56,7 @@ if (isDevelopment) {
           // noChange void
           // changed commit push
           if (logseq.settings?.autoPush) {
+            logInfo("autoPush is enabled, saving...");
             operations.sync();
           }
         }
