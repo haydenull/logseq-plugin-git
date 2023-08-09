@@ -7,31 +7,31 @@
     "icon": "logo.png"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite build --minify false --watch",
     "build": "tsc && vite build",
     "preview": "vite preview"
   },
   "dependencies": {
     "@logseq/libs": "^0.0.15",
-    "antd": "^5.7.3",
+    "antd": "^5.8.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^10.0.4",
-    "@types/node": "^20.4.5",
-    "@types/react": "^18.2.17",
+    "@types/node": "^20.4.9",
+    "@types/react": "^18.2.19",
     "@types/react-dom": "^18.2.7",
-    "@vitejs/plugin-react": "^4.0.3",
-    "autoprefixer": "^10.4.2",
+    "@vitejs/plugin-react": "^4.0.4",
+    "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.1.6",
-    "vite": "^4.4.7",
+    "vite": "^4.4.9",
     "vite-plugin-importer": "^0.2.5"
   },
-  "packageManager": "pnpm@8.6.10"
+  "packageManager": "pnpm@8.6.11"
 }
