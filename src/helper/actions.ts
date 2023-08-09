@@ -201,9 +201,7 @@ export const operations = {
       const status = await checkStatus();
       const changed = status?.stdout !== "";
       if (changed) {
-        const res = await commit(
-          `[logseq-plugin-git:commit] ${new Date().toISOString()}`
-        );
+        const res = await commit();
         if (res.exitCode === 0) await push(true);
       }
       await checkStatus();

@@ -177,15 +177,24 @@ export const checkout = async (showRes = true): Promise<IGitResult> => {
 };
 
 // git commit
-export const commit = async (
-  message: string = `[logseq-plugin-git:commit] ${new Date().toISOString()}`,
-  showRes = true
-): Promise<IGitResultExtended> => {
+export const commit = async (showRes = true): Promise<IGitResultExtended> => {
   logDebug("git add .");
   await execGitCommand(["add", "."]);
 
+  // // build better commit message
+  // const namesRes = await execGitCommand([
+  //   "diff",
+  //   "--name-only",
+  //   "HEAD~1..HEAD"
+  // ]);
+  // if (!namesRes.isOk) {
+  //   return namesRes;
+  // }
+  // const message = ["-m", namesRes.stdout.split("\n").join(", ")];
+  const message = ["--allow-empty-message", "-m", ""];
+
   logDebug("git commit .");
-  const res = await execGitCommand(["commit", "-m", message]);
+  const res = await execGitCommand(["commit", ...message]);
   logDebug("git commit =", res);
 
   if (!res.isOk) {
@@ -228,9 +237,7 @@ export const push = async (showRes = true): Promise<IGitResultExtended> => {
 export const sync = async (): Promise<IGitResult> => {
   logDebug("sync");
   // local commit_message=$(git diff --name-only HEAD~1..HEAD)
-  let res = await commit(
-    `[logseq-plugin-git:sync] ${new Date().toISOString()}`
-  );
+  let res = await commit();
   if (res.isOk) {
     res = await pullRebase();
     if (
