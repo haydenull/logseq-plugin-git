@@ -22,15 +22,15 @@
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/npm": "^10.0.4",
-    "@types/node": "^20.4.5",
-    "@types/react": "^18.2.18",
+    "@types/node": "^20.4.9",
+    "@types/react": "^18.2.19",
     "@types/react-dom": "^18.2.7",
     "@vitejs/plugin-react": "^4.0.4",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.27",
     "tailwindcss": "^3.3.3",
     "typescript": "^5.1.6",
-    "vite": "^4.4.8",
+    "vite": "^4.4.9",
     "vite-plugin-importer": "^0.2.5"
   },
   "packageManager": "pnpm@8.6.11"
