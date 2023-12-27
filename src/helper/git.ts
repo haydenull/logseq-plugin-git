@@ -8,9 +8,9 @@ export const status = async (showRes = true): Promise<IGitResult> => {
   console.log('[faiz:] === git status', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git status success')
+      logseq.UI.showMsg('Git status success')
     } else {
-      logseq.App.showMsg(`Git status failed\n${res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git status failed\n${res.stderr}`, 'error')
     }
   }
   /**
@@ -41,9 +41,9 @@ export const log = async (showRes = true): Promise<IGitResult> => {
   console.log('[faiz:] === git log', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git log success')
+      logseq.UI.showMsg('Git log success')
     } else {
-      logseq.App.showMsg(`Git log failed\n${res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git log failed\n${res.stderr}`, 'error')
     }
   }
   return res
@@ -55,9 +55,9 @@ export const pull = async (showRes = true): Promise<IGitResult> => {
   console.log('[faiz:] === git pull', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git pull success')
+      logseq.UI.showMsg('Git pull success')
     } else {
-      logseq.App.showMsg(`Git pull failed\n${res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git pull failed\n${res.stderr}`, 'error')
     }
   }
   return res
@@ -69,9 +69,9 @@ export const pullRebase = async (showRes = true): Promise<IGitResult> => {
   console.log('[faiz:] === git pull --rebase', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git pull --rebase success')
+      logseq.UI.showMsg('Git pull --rebase success')
     } else {
-      logseq.App.showMsg(`Git pull --rebase failed\n${res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git pull --rebase failed\n${res.stderr}`, 'error')
     }
   }
   return res
@@ -83,9 +83,9 @@ export const checkout = async (showRes = true): Promise<IGitResult> => {
   console.log('[faiz:] === git checkout .', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git checkout success')
+      logseq.UI.showMsg('Git checkout success')
     } else {
-      logseq.App.showMsg(`Git checkout failed\n${res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git checkout failed\n${res.stderr}`, 'error')
     }
   }
   return res
@@ -99,9 +99,9 @@ export const commit = async (showRes = true, message: string): Promise<IGitResul
   console.log('[faiz:] === git commit', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git commit success')
+      logseq.UI.showMsg('Git commit success')
     } else {
-      logseq.App.showMsg(`Git commit failed\n${res.stdout || res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git commit failed\n${res.stdout || res.stderr}`, 'error')
     }
   }
   return res
@@ -114,9 +114,9 @@ export const push = async (showRes = true): Promise<IGitResult> => {
   console.log('[faiz:] === git push', res)
   if (showRes) {
     if (res.exitCode === 0) {
-      logseq.App.showMsg('Git push success')
+      logseq.UI.showMsg('Git push success')
     } else {
-      logseq.App.showMsg(`Git push failed\n${res.stderr}`, 'error')
+      logseq.UI.showMsg(`Git push failed\n${res.stderr}`, 'error')
     }
   }
   return res

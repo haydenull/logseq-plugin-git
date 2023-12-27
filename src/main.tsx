@@ -7,6 +7,19 @@ import { checkout, commit, log, pull, pullRebase, push, status } from './helper/
 import { checkStatus, debounce, hidePopup, setPluginStyle, showPopup, checkIsSynced, checkStatusWithDebounce } from './helper/util'
 import './index.css'
 
+// TODO: patch logseq Git command for the temporary fix solution
+// https://github.com/haydenull/logseq-plugin-git/issues/48
+try {
+  // @ts-ignore
+  top.logseq.sdk.git.exec_command(['status'])
+} catch (e) {
+  // @ts-ignore
+  logseq.Git['execCommand'] = async function (args: string[]) {
+    const ret = await logseq.App.execGitCommand(args)
+    return {exitCode: ret == undefined ? 1 : 0, stdout: ret}
+  }
+}
+
 const isDevelopment = import.meta.env.DEV
 
 if (isDevelopment) {
