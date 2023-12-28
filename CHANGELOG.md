@@ -1,3 +1,10 @@
+## [1.5.5](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.4...v1.5.5) (2023-12-28)
+
+
+### Bug Fixes
+
+* patch git exec command ([#50](https://github.com/haydenull/logseq-plugin-git/issues/50)) ([b4a4229](https://github.com/haydenull/logseq-plugin-git/commit/b4a422930288ff32cf2ff2fd23a71f0ca862b606))
+
 ## [1.5.4](https://github.com/haydenull/logseq-plugin-git/compare/v1.5.3...v1.5.4) (2023-07-27)
 
 
