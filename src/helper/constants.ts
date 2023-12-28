@@ -1,6 +1,9 @@
 import { SettingSchemaDesc } from "@logseq/libs/dist/LSPlugin.user";
 
 export const COMMON_STYLE = `
+.ui-items-container[data-type=toolbar] > .list-wrap {
+  overflow: visible;
+}
 #injected-ui-item-git-logseq-git {
   position: relative;
 }

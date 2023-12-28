@@ -28,7 +28,7 @@ export const getPluginStyle = () => pluginStyle;
 
 export const showPopup = () => {
   const _style = getPluginStyle();
-  logseq.App.queryElementRect("#logseq-git--git").then((triggerIconRect) => {
+  logseq.UI.queryElementRect("#logseq-git--git").then((triggerIconRect) => {
     console.log("[faiz:] === triggerIconRect", triggerIconRect);
     if (!triggerIconRect) return;
     const popupWidth = 120 + 10 * 2;
