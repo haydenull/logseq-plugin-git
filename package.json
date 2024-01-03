@@ -12,7 +12,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@logseq/libs": "^0.0.15",
+    "@logseq/libs": "^0.0.16",
     "antd": "^5.8.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
@@ -32,6 +32,5 @@
     "typescript": "^5.1.6",
     "vite": "^4.4.9",
     "vite-plugin-importer": "^0.2.5"
-  },
-  "packageManager": "pnpm@8.6.11"
+  }
 }

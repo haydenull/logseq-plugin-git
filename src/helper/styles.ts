@@ -7,6 +7,9 @@ let popupLeft = 0;
 let popupTop = 0;
 
 const COMMON_STYLE = `
+.ui-items-container[data-type=toolbar] > .list-wrap {
+  overflow: visible;
+}
 #injected-ui-item-git-logseq-git {
   position: relative;
 }
@@ -234,7 +237,7 @@ export const loadingEffect = async fn => {
 
 export const showPopup = () => {
   logDebug("showPopup");
-  logseq.App.queryElementRect("#logseq-git--git").then(triggerIconRect => {
+  logseq.UI.queryElementRect("#logseq-git--git").then(triggerIconRect => {
     // logDebug("triggerIconRect", triggerIconRect);
     if (!triggerIconRect) return;
     const popupWidth = 120 + 10 * 2;
