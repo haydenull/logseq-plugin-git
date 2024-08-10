@@ -67,7 +67,7 @@ ${COMMON_STYLE}
   width: 8px;
   height: 8px;
   border-radius: 100%;
-  background-color: rgb(237, 66, 69);
+  background-color: var(--color-red-900, rgb(237, 66, 69));
   right: 8px;
   top: 6px;
 }
@@ -82,7 +82,7 @@ ${COMMON_STYLE}
   width: 8px;
   height: 8px;
   border-radius: 100%;
-  background-color: rgb(237, 66, 69);
+  background-color: var(--color-red-900, rgb(237, 66, 69));
   right: 8px;
   top: 6px;
   animation: blink 1s linear infinite;

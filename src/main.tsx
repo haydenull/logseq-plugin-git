@@ -140,7 +140,7 @@ if (isDevelopment) {
               ${buttons
                 .map(
                   (button) =>
-                    `<button class="ui__button plugin-git-${button?.key} bg-indigo-600 hover:bg-indigo-700 focus:border-indigo-700 active:bg-indigo-700 text-center text-sm p-1" style="margin: 4px 0; color: #fff;">${button?.title}</button>`
+                    `<button class="ui__button button plugin-git-${button?.key} text-center text-sm p-1" style="margin: 4px 0; color: var(--ls-primary-text-color, #eee);">${button?.title}</button>`
                 )
                 .join("\n")}
           </div>
