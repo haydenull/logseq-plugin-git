@@ -102,6 +102,26 @@ if (isDevelopment) {
         }
         checkStatus();
       }),
+      commitAndPullRebaseAndPush: debounce(async function () {
+        setPluginStyle(LOADING_STYLE);
+        hidePopup();
+
+        const status = await checkStatus();
+        const changed = status?.stdout !== "";
+        if (changed) {
+          const res = await commit(
+              true,
+              commitMessage()
+          );
+
+          if (res.exitCode === 0) {
+            const pull_res = await pullRebase();
+            if (pull_res.exitCode == 0) await push(true);
+          }
+        }
+        checkStatus();
+      }),
+
       log: debounce(async function () {
         console.log("[faiz:] === log click");
         const res = await log(false);
@@ -215,6 +235,17 @@ if (isDevelopment) {
         },
       },
       () => operations.commitAndPush()
+    );
+    logseq.App.registerCommandPalette(
+      {
+        key: "logseq-plugin-git:commit&pullrebase&push",
+        label: "Commit & Pull Rebase & Push",
+        keybinding: {
+          binding: "unset",
+          mode: "global",
+        },
+      },
+      () => operations.commitAndPullRebaseAndPush()
     );
     logseq.App.registerCommandPalette(
         {
