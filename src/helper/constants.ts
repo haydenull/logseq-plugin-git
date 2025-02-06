@@ -113,6 +113,14 @@ export const BUTTONS = [
 
 export const SETTINGS_SCHEMA: SettingSchemaDesc[] = [
   {
+    key: "customRepoRoot",
+    title: "Custom Repository Root Path",
+    type: "string",
+    default: "/",
+    description:
+      "Custom repository root, relative to the current graph root (can contain `..` path nodes). Defaults to /, which means the graph root.",
+  },
+  {
     key: "buttons",
     title: "Buttons",
     type: "enum",

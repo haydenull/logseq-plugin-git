@@ -8,8 +8,16 @@ export const execGitCommand = async (args: string[]) : Promise<IGitResult> => {
 
   let res
   try {
-    const currentGitFolder = (await logseq.App.getCurrentGraph())?.path
-    const runArgs = currentGitFolder ? ['-C', currentGitFolder, ...args] : args
+    const currentGitFolder = (await logseq.App.getCurrentGraph())?.path;
+    const relCurrGitFolder = currentGitFolder
+      ? //path.resolve(
+        (((currentGitFolder as string) +
+          "/" +
+          logseq.settings?.customRepoRoot) as string)
+      : //)
+        (logseq.settings?.customRepoRoot as string);
+    const runArgs = relCurrGitFolder ? ["-C", relCurrGitFolder, ...args] : args;
+    //const runArgs = currentGitFolder ? ["-C", currentGitFolder, ...args] : args;
     _inProgress = logseq.Git.execCommand(runArgs)
     res = await _inProgress
   } finally {
